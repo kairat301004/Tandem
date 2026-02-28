@@ -1,0 +1,62 @@
+databaseChangeLog:
+  - changeSet:
+      id: file-table
+      author: Kairat
+      changes:
+        - createTable:
+            tableName: file
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: file_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: file_url
+                  type: text
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: file_type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: size
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: uploader_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: task_id
+                  type: uuid
+
+              - column:
+                  name: news_id
+                  type: uuid
+
+              - column:
+                  name: message_id
+                  type: uuid
+
+              - column:
+                  name: uploaded_at
+                  type: timestamp
+                  constraints:
+                    nullable: false

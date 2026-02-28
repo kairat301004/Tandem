@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: fk-connection-user-role-user
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: connection_user_and_role
+            baseColumnNames: user_id
+            constraintName: fk_connection_user_role_user
+            referencedTableName: user
+            referencedColumnNames: id
+
+  - changeSet:
+      id: fk-connection-user-role-role
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: connection_user_and_role
+            baseColumnNames: role_id
+            constraintName: fk_connection_user_role_role
+            referencedTableName: role
+            referencedColumnNames: id

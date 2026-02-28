@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: comment-table
+      author: Kairat
+      changes:
+        - createTable:
+            tableName: comment
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: content
+                  type: text
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: author_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: news_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false

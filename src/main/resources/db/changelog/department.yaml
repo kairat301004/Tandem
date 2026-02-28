@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: department_table
+      author: Kairat
+      changes:
+        - createTable:
+            tableName: department
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+
+              - column:
+                  name: name
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: text
+
+              - column:
+                  name: manager_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: timestamp
+                  constraints:
+                    nullable: false

@@ -1,0 +1,36 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-role-permissions
+      author: Kairat
+      changes:
+
+        # 1. Создаём таблицу
+        - createTable:
+            tableName: role_permissions
+            columns:
+              - column:
+                  name: role_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: permission
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+        # 2. PK (композитный)
+        - addPrimaryKey:
+            tableName: role_permissions
+            columnNames: role_id, permission
+            constraintName: role_permissions_pk
+
+        # 3. FK → role(id)
+        - addForeignKeyConstraint:
+            baseTableName: role_permissions
+            baseColumnNames: role_id
+            referencedTableName: role
+            referencedColumnNames: id
+            constraintName: fk_role_permissions_role
+            onDelete: CASCADE

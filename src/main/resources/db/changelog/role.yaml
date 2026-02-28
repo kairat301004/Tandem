@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: role-table
+      author: Kairat
+      changes:
+        - createTable:
+            tableName: role
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: varchar
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: text

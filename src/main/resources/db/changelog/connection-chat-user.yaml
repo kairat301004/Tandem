@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: connection-chat-user-table
+      author: Kairat
+      changes:
+        - createTable:
+            tableName: connection_chat_and_user
+            columns:
+              - column:
+                  name: chat_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false

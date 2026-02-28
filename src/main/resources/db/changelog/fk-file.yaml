@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: fk-file-uploader
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: file
+            baseColumnNames: uploader_id
+            constraintName: fk_file_uploader
+            referencedTableName: user
+            referencedColumnNames: id
+
+  - changeSet:
+      id: fk-file-task
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: file
+            baseColumnNames: task_id
+            constraintName: fk_file_task
+            referencedTableName: task
+            referencedColumnNames: id
+
+  - changeSet:
+      id: fk-file-news
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: file
+            baseColumnNames: news_id
+            constraintName: fk_file_news
+            referencedTableName: news
+            referencedColumnNames: id
+
+  - changeSet:
+      id: fk-file-message
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: file
+            baseColumnNames: message_id
+            constraintName: fk_file_message
+            referencedTableName: message
+            referencedColumnNames: id

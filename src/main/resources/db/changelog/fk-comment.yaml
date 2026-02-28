@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: fk-comment-author
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: comment
+            baseColumnNames: author_id
+            constraintName: fk_comment_author
+            referencedTableName: user
+            referencedColumnNames: id
+
+  - changeSet:
+      id: fk-comment-news
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: comment
+            baseColumnNames: news_id
+            constraintName: fk_comment_news
+            referencedTableName: news
+            referencedColumnNames: id

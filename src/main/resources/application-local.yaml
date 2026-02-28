@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/corp_platform
+    username: postgres
+    password: postgres
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+  redis:
+    host: localhost
+    port: 6379
+
+server:
+  port: 8081

@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: fk-notification-user
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: notification
+            baseColumnNames: user_id
+            constraintName: fk_notification_user
+            referencedTableName: user
+            referencedColumnNames: id

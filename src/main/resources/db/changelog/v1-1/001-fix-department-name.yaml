@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: fix-department-name-type
+      author: Kairat
+      changes:
+        - modifyDataType:
+            tableName: department
+            columnName: name
+            newDataType: varchar

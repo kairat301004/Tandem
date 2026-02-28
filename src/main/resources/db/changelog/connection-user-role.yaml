@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: connection-user-role-table
+      author: Kairat
+      changes:
+        - createTable:
+            tableName: connection_user_and_role
+            columns:
+              - column:
+                  name: user_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: role_id
+                  type: uuid
+                  constraints:
+                    nullable: false

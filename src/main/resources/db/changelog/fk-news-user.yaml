@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: fk-news-author
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: news
+            baseColumnNames: author_id
+            constraintName: fk_news_author
+            referencedTableName: user
+            referencedColumnNames: id

@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: message-table
+      author: Kairat
+      changes:
+        - createTable:
+            tableName: message
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: chat_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: sender_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: content
+                  type: text
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false

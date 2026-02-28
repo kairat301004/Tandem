@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - include: { file: db/changelog/user.yaml }
+  - include: { file: db/changelog/role.yaml }
+  - include: { file: db/changelog/department.yaml }
+  - include: { file: db/changelog/task.yaml }
+  - include: { file: db/changelog/news.yaml }
+  - include: { file: db/changelog/comment.yaml }
+  - include: { file: db/changelog/file.yaml }
+  - include: { file: db/changelog/chat.yaml }
+  - include: { file: db/changelog/message.yaml }
+  - include: { file: db/changelog/notification.yaml }
+  - include: { file: db/changelog/connection-user-role.yaml }
+  - include: { file: db/changelog/connection-chat-user.yaml }
+  - include: { file: db/changelog/v1-1/001-fix-department-name.yaml}
+  - include: { file: db/changelog/v1-1/002-create-role-permissions.yaml}
+
+  # foreign keys
+  - include: { file: db/changelog/fk-user-department.yaml }
+  - include: { file: db/changelog/fk-department-manager.yaml }
+  - include: { file: db/changelog/fk-task-user.yaml }
+  - include: { file: db/changelog/fk-news-user.yaml }
+  - include: { file: db/changelog/fk-comment.yaml }
+  - include: { file: db/changelog/fk-file.yaml }
+  - include: { file: db/changelog/fk-message.yaml }
+  - include: { file: db/changelog/fk-notification.yaml }
+  - include: { file: db/changelog/fk-connection-user-role.yaml }
+  - include: { file: db/changelog/fk-connection-chat-user.yaml }

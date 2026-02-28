@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: fk-connection-chat-user-chat
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: connection_chat_and_user
+            baseColumnNames: chat_id
+            constraintName: fk_connection_chat_user_chat
+            referencedTableName: chat
+            referencedColumnNames: id
+
+  - changeSet:
+      id: fk-connection-chat-user-user
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: connection_chat_and_user
+            baseColumnNames: user_id
+            constraintName: fk_connection_chat_user_user
+            referencedTableName: user
+            referencedColumnNames: id

@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: fk-task-creator
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: task
+            baseColumnNames: creator_id
+            constraintName: fk_task_creator
+            referencedTableName: user
+            referencedColumnNames: id
+
+  - changeSet:
+      id: fk-task-assigned
+      author: Kairat
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: task
+            baseColumnNames: assigned_id
+            constraintName: fk_task_assigned
+            referencedTableName: user
+            referencedColumnNames: id

@@ -1,0 +1,63 @@
+databaseChangeLog:
+  - changeSet:
+      id: task-table
+      author: Kairat
+      changes:
+        - createTable:
+            tableName: task
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: title
+                  type: varchar
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: description
+                  type: text
+
+              - column:
+                  name: status
+                  type: varchar
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: priority
+                  type: varchar
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: creator_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: assigned_id
+                  type: uuid
+
+              - column:
+                  name: deadline
+                  type: timestamp
+
+              - column:
+                  name: created_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: update_at
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
