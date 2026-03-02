@@ -57,4 +57,8 @@ public class CustomUserDetails implements UserDetails {
     public User getUser() {
         return user;
     }
+
+    public static CustomUserDetails fromUser(User user) {
+        return new CustomUserDetails(user);
+    }
 }
