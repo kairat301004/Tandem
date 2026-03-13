@@ -4,10 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginRequest {
+public class AuthResponse {
+    private UUID id;
     private String email;
-    private String password;
+    private String firstName;
+    private String lastName;
 }

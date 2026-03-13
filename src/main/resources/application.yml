@@ -19,8 +19,16 @@ spring:
     show-sql: true
 
   liquibase:
-    analytics-enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
+
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
+
+
+
 
 
 
