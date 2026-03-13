@@ -11,6 +11,7 @@ public enum Permission {
     UPDATE_TASK,
     DELETE_TASK,
 
+    READ_USERS,
     MANAGE_USERS,
     MANAGE_ROLES
 }
