@@ -16,6 +16,7 @@ import java.util.UUID;
 @RequestMapping("/api/news")
 public class NewsController {
 
+
     private final NewsService newsService;
 
     public NewsController(NewsService newsService) {

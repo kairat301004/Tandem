@@ -13,5 +13,7 @@ public enum Permission {
 
     READ_USERS,
     MANAGE_USERS,
-    MANAGE_ROLES
+    MANAGE_ROLES,
+
+    DELETE_FILE
 }

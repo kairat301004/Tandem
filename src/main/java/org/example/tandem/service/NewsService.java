@@ -26,6 +26,7 @@ import java.util.UUID;
 @Service
 public class NewsService {
 
+
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
 
