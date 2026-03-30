@@ -1,5 +1,6 @@
 package org.example.tandem.service;
 
+import org.example.tandem.dto.file.FileResponse;
 import org.example.tandem.dto.news.NewsRequest;
 import org.example.tandem.dto.news.NewsResponse;
 import org.example.tandem.entity.News;
@@ -152,19 +153,28 @@ public class NewsService {
         if (!isAuthor && !hasPermission) {
             throw new AccessDeniedException("У вас недостаточно прав для удаления этой новости");
         }
+
+        //Сначала удаляем файлы, связанные с новостью
+        fileService.deleteFilesByNewsId(id);
+
+        //Затем удаляем саму новость
         newsRepository.delete(news);
     }
 
 
     // Вспомогательный метод для маппинга
     private NewsResponse mapToResponse(News news) {
+        // Получаем файлы, прикрепленные к новости
+        List<FileResponse> files = fileService.getFilesByNewsId(news.getId());
+
         return new NewsResponse(
                 news.getId(),
                 news.getTitle(),
                 news.getContent(),
                 news.getAuthor().getFirstName() + " " + news.getAuthor().getLastName(),
                 news.getCreatedAt(),
-                news.getIsPinned()
+                news.getIsPinned(),
+                files  // <-- ДОБАВИТЬ
         );
     }
 

@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -112,6 +113,38 @@ public class FileService {
         // 6. Вернуть FileResponse
         return mapToResponse(savedFile);
 
+    }
+
+    /**
+     * Получить все файлы, прикрепленные к новости
+     */
+    public List<FileResponse> getFilesByNewsId(UUID newsId) {
+        List<File> files = fileRepository.findByNewsId(newsId);
+        return files.stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    /**
+     * Удалить все файлы, прикрепленные к новости
+     */
+    @Transactional
+    public void deleteFilesByNewsId(UUID newsId) {
+        List<File> files = fileRepository.findByNewsId(newsId);
+
+        for (File file : files) {
+            // Удаляем физический файл с диска
+            try {
+                Path filePath = Paths.get(file.getFileUrl());
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                // Логируем ошибку, но не прерываем удаление остальных
+                System.err.println("Failed to delete file: " + file.getFileUrl());
+            }
+
+            // Удаляем запись из БД
+            fileRepository.delete(file);
+        }
     }
 
     //Метод для сохранения файла с новостями
