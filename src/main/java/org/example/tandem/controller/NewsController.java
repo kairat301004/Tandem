@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -25,8 +27,10 @@ public class NewsController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('CREATE_NEWS')")
-    public ResponseEntity<NewsResponse> createNews(@Valid @RequestBody NewsRequest request) {
-        NewsResponse response = newsService.createNews(request);
+    public ResponseEntity<NewsResponse> createNews(
+            @RequestPart("news") @Valid NewsRequest request,
+            @RequestPart(value = "files", required = false)List<MultipartFile> files) {
+        NewsResponse response = newsService.createNews(request, files);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

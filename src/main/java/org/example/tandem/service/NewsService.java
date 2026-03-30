@@ -19,8 +19,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -29,11 +31,13 @@ public class NewsService {
 
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
+    private final FileService fileService;
 
-    public NewsService(NewsRepository newsRepository, UserRepository userRepository) {
+    public NewsService(NewsRepository newsRepository, UserRepository userRepository, FileService fileService) {
         this.newsRepository = newsRepository;
         this.userRepository = userRepository;
 
+        this.fileService = fileService;
     }
 
     private User getCurrentUser() {
@@ -51,6 +55,30 @@ public class NewsService {
     public NewsResponse createNews(NewsRequest request) {
         User currentUser = getCurrentUser();
 
+        News savedNews = buildAndSaveNews(request, currentUser);
+
+        return mapToResponse(savedNews);
+    }
+
+    @Transactional
+    @CacheEvict(value = "allNews", allEntries = true)
+    public NewsResponse createNews(NewsRequest request, List<MultipartFile> files) {
+        User currentUser = getCurrentUser();
+
+        News savedNews = buildAndSaveNews(request, currentUser);
+
+        if (files != null && !files.isEmpty()) {
+            for (MultipartFile file : files) {
+                fileService.uploadFileForNews(file, savedNews);
+            }
+        }
+
+        return mapToResponse(savedNews);
+    }
+
+
+
+    private News buildAndSaveNews(NewsRequest request, User currentUser) {
         News news = News.builder()
                 .title(request.getTitle())
                 .content(request.getContent())
@@ -60,8 +88,7 @@ public class NewsService {
                 .isPinned(false)
                 .build();
 
-        News savedNews = newsRepository.save(news);
-        return mapToResponse(savedNews);
+        return newsRepository.save(news);
     }
 
     // READ ALL (с пагинацией)
