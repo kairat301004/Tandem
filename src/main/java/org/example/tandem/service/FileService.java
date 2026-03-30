@@ -2,6 +2,7 @@ package org.example.tandem.service;
 
 import org.example.tandem.dto.file.FileResponse;
 import org.example.tandem.entity.File;
+import org.example.tandem.entity.News;
 import org.example.tandem.entity.User;
 import org.example.tandem.repository.FileRepository;
 import org.example.tandem.repository.UserRepository;
@@ -111,6 +112,47 @@ public class FileService {
         // 6. Вернуть FileResponse
         return mapToResponse(savedFile);
 
+    }
+
+    //Метод для сохранения файла с новостями
+    @Transactional
+    public void uploadFileForNews(MultipartFile multipartFile, News news) {
+
+        User currentUser = getCurrentUser();
+
+        if (multipartFile.isEmpty()) {
+            throw new IllegalArgumentException("Файл пустой");
+        }
+
+        String originalFileName = multipartFile.getOriginalFilename();
+        String uniqueFileName = generateUniqueFileName(originalFileName);
+
+        try {
+            Path uploadPath = Paths.get(System.getProperty("user.dir"), uploaderDir)
+                    .toAbsolutePath()
+                    .normalize();
+
+            Files.createDirectories(uploadPath);
+
+            Path filePath = uploadPath.resolve(uniqueFileName);
+
+            multipartFile.transferTo(filePath);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка сохранения файла", e);
+        }
+
+        File file = File.builder()
+                .fileName(originalFileName)
+                .fileUrl(uploaderDir + "/" + uniqueFileName)
+                .fileType(multipartFile.getContentType())
+                .size(multipartFile.getSize())
+                .uploader(currentUser)
+                .uploadedAt(LocalDateTime.now())
+                .news(news)
+                .build();
+
+        fileRepository.save(file);
     }
 
     //Метод для скачивания файла
