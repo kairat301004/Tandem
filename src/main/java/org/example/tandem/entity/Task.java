@@ -45,7 +45,7 @@ public class Task {
     private User creator;
 
     @ManyToOne
-    @JoinColumn(name = "assigned_id", nullable = false)
+    @JoinColumn(name = "assigned_id")
     private User assigned;
 
     @OneToMany(mappedBy = "task")

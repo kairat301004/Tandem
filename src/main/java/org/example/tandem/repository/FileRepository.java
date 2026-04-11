@@ -24,4 +24,7 @@ public interface FileRepository extends JpaRepository<File, UUID> {
 
     //Найти все файлы по ID новости
     List<File> findByNewsId(UUID newsId);
+
+    List<File> findByTaskId(UUID taskId);
+    int countByTaskId(UUID taskId);
 }
