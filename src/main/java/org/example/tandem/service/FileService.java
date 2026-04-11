@@ -3,6 +3,7 @@ package org.example.tandem.service;
 import org.example.tandem.dto.file.FileResponse;
 import org.example.tandem.entity.File;
 import org.example.tandem.entity.News;
+import org.example.tandem.entity.Task;
 import org.example.tandem.entity.User;
 import org.example.tandem.repository.FileRepository;
 import org.example.tandem.repository.UserRepository;
@@ -303,6 +304,68 @@ public class FileService {
                 file.getUploadedAt(),
                 downloadUrl
         );
+    }
+
+    // Метод для сохранения файла с задачей
+    @Transactional
+    public void uploadFileForTask(MultipartFile multipartFile, Task task) {
+
+        User currentUser = getCurrentUser();
+
+        if (multipartFile.isEmpty()) throw new IllegalArgumentException("Файл пустой");
+
+        String originalFileName = multipartFile.getOriginalFilename();
+        String uniqueFileName = generateUniqueFileName(originalFileName);
+
+        try {
+            Path uploadPath = Paths.get(System.getProperty("user.dir"), uploaderDir)
+                    .toAbsolutePath()
+                    .normalize();
+
+            Files.createDirectories(uploadPath);
+
+            Path filePath = uploadPath.resolve(uniqueFileName);
+            multipartFile.transferTo(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка сохранения файла", e);
+        }
+
+        File file = File.builder()
+                .fileName(originalFileName)
+                .fileUrl(uploaderDir + "/" + uniqueFileName)
+                .fileType(multipartFile.getContentType())
+                .size(multipartFile.getSize())
+                .uploader(currentUser)
+                .uploadedAt(LocalDateTime.now())
+                .task(task)
+                .build();
+
+        fileRepository.save(file);
+    }
+
+    // Получить файлы по ID задачи
+    public List<FileResponse> getFilesByTaskId(UUID taskId) {
+        List<File> files = fileRepository.findByTaskId(taskId);
+        return files.stream().map(this::mapToResponse).toList();
+    }
+
+    // Подсчитать количество файлов у задачи
+    public int countFilesByTaskId(UUID taskId) {
+        return fileRepository.countByTaskId(taskId);
+    }
+
+    // Удалить файлы задачи
+    @Transactional
+    public void deleteFilesByTaskId(UUID taskId) {
+        List<File> files = fileRepository.findByTaskId(taskId);
+        for (File file : files) {
+            try {
+                Files.deleteIfExists(Paths.get(file.getFileUrl()));
+            } catch (IOException e) {
+                System.err.println("Failed to delete file: " + file.getFileUrl());
+            }
+            fileRepository.delete(file);
+        }
     }
     /**
      * Вспомогательный метод для генерации уникального имени файла
