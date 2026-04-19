@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-make-chat-name-nullable
+      author: Kairat
+      description: Make chat.name nullable to support private chats without names
+      changes:
+        - dropNotNullConstraint:
+            tableName: chat
+            columnName: name
+            columnDataType: varchar(255)

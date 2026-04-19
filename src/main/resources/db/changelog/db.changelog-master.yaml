@@ -13,6 +13,8 @@ databaseChangeLog:
   - include: { file: db/changelog/connection-chat-user.yaml }
   - include: { file: db/changelog/v1-1/001-fix-department-name.yaml}
   - include: { file: db/changelog/v1-1/002-create-role-permissions.yaml}
+  - include: { file: db/changelog/v1-1/004-add-is-read-to-message.yaml}
+  - include: { file: db/changelog/v1-1/005-make-chat-name-nullable.yaml}
 
   # foreign keys
   - include: { file: db/changelog/fk-user-department.yaml }
