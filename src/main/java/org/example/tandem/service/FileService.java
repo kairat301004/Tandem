@@ -1,10 +1,7 @@
 package org.example.tandem.service;
 
 import org.example.tandem.dto.file.FileResponse;
-import org.example.tandem.entity.File;
-import org.example.tandem.entity.News;
-import org.example.tandem.entity.Task;
-import org.example.tandem.entity.User;
+import org.example.tandem.entity.*;
 import org.example.tandem.repository.FileRepository;
 import org.example.tandem.repository.UserRepository;
 import org.example.tandem.security.CustomUserDetails;
@@ -367,6 +364,52 @@ public class FileService {
             fileRepository.delete(file);
         }
     }
+
+
+
+    // Загрузить файл для сообщения
+    @Transactional
+    public void uploadFileForMessage(MultipartFile multipartFile, Message message) {
+        User currentUser = getCurrentUser();
+
+        if (multipartFile.isEmpty()) {
+            throw new IllegalArgumentException("Файл пустой");
+        }
+
+        String originalFileName = multipartFile.getOriginalFilename();
+        String uniqueFileName = generateUniqueFileName(originalFileName);
+
+        try {
+            Path uploadPath = Paths.get(System.getProperty("user.dir"), uploaderDir)
+                    .toAbsolutePath().normalize();
+            Files.createDirectories(uploadPath);
+
+            Path filePath = uploadPath.resolve(uniqueFileName);
+            multipartFile.transferTo(filePath);
+
+        } catch (IOException e) {
+            throw new RuntimeException("Ошибка сохранения файла", e);
+        }
+
+        File file = File.builder()
+                .fileName(originalFileName)
+                .fileUrl(uploaderDir + "/" + uniqueFileName)
+                .fileType(multipartFile.getContentType())
+                .size(multipartFile.getSize())
+                .uploader(currentUser)
+                .uploadedAt(LocalDateTime.now())
+                .message(message)  // Привязываем к сообщению
+                .build();
+
+        fileRepository.save(file);
+    }
+
+    // Получить файлы сообщения
+    public List<FileResponse> getFilesByMessageId(UUID messageId) {
+        List<File> files = fileRepository.findByMessageId(messageId);
+        return files.stream().map(this::mapToResponse).toList();
+    }
+
     /**
      * Вспомогательный метод для генерации уникального имени файла
      */

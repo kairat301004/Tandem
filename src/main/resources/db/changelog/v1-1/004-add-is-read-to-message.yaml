@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-add-is-read-to-message
+      author: kairat
+      description: Add is_read column to message table for tracking read/unread messages
+      changes:
+        - addColumn:
+            tableName: message
+            columns:
+              - column:
+                  name: is_read
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

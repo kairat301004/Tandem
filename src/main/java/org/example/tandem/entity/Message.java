@@ -40,4 +40,8 @@ public class Message {
 
     @OneToMany(mappedBy = "message")
     private Set<File> files = new HashSet<>();
+
+    @Column(name = "is_read", nullable = false)
+    @Builder.Default
+    private Boolean isRead = false;
 }
