@@ -37,13 +37,15 @@ public class ChatService {
     private final UserRepository userRepository;
     private final FileService fileService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final NotificationService notificationService;
 
-    public ChatService(ChatRepository chatRepository, MessageRepository messageRepository, UserRepository userRepository, FileService fileService, SimpMessagingTemplate messagingTemplate) {
+    public ChatService(ChatRepository chatRepository, MessageRepository messageRepository, UserRepository userRepository, FileService fileService, SimpMessagingTemplate messagingTemplate, NotificationService notificationService) {
         this.chatRepository = chatRepository;
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
         this.fileService = fileService;
         this.messagingTemplate = messagingTemplate;
+        this.notificationService = notificationService;
     }
 
     private User getCurrentUser() {
@@ -113,8 +115,17 @@ public class ChatService {
 
         Chat savedChat = chatRepository.save(chat);
 
-        // Отправляем уведомление всем участникам о создании чата
-        notifyParticipants(savedChat, "CHAT_CREATED");
+        // Уведомление всем участникам о создании чата
+        String title = "Новый групповой чат";
+        String content = currentUser.getFirstName() + " " + currentUser.getLastName() +
+                " добавил вас в чат \"" + name + "\"";
+        String link = "/chats/" + savedChat.getId();
+
+        for (User participant : savedChat.getUsers()) {
+            if (!participant.getId().equals(currentUser.getId())) {
+                notificationService.sendNotification(participant, "CHAT", title, content, link);
+            }
+        }
 
         return mapToChatResponse(savedChat, currentUser.getId());
     }
@@ -221,6 +232,19 @@ public class ChatService {
                 .build();
 
         Message savedMessage = messageRepository.save(message);
+
+        // Уведомление всем участникам чата (кроме отправителя)
+        String title = "Новое сообщение в чате";
+        String chatName = chat.getName() != null ? chat.getName() : "Приватный чат";
+        String notificationContent = currentUser.getFirstName() + " " + currentUser.getLastName() +
+                " в " + chatName + ": " + (content.length() > 50 ? content.substring(0, 50) + "..." : content);
+        String link = "/chats/" + chat.getId();
+
+        for (User participant : chat.getUsers()) {
+            if (!participant.getId().equals(currentUser.getId())) {
+                notificationService.sendNotification(participant, "CHAT", title, notificationContent, link);
+            }
+        }
 
         // Обновляем updated_at чата
         chat.setUpdatedAt(LocalDateTime.now());

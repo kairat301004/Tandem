@@ -33,11 +33,13 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final FileService fileService;
+    private final NotificationService notificationService;
 
-    public TaskService(TaskRepository taskRepository, UserRepository userRepository, FileService fileService) {
+    public TaskService(TaskRepository taskRepository, UserRepository userRepository, FileService fileService, NotificationService notificationService) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.fileService = fileService;
+        this.notificationService = notificationService;
     }
 
     private User getCurrentUser() {
@@ -73,6 +75,19 @@ public class TaskService {
                 .build();
 
         Task savedTask = taskRepository.save(task);
+
+        // Уведомление создателю
+        String creatorTitle = "Задача создана";
+        String creatorContent = "Задача \"" + request.getTitle() + "\" успешно создана";
+        notificationService.sendNotification(currentUser, "TASK", creatorTitle, creatorContent, "/tasks/" + savedTask.getId());
+
+        // Уведомление исполнителю (если назначен)
+        if (assigned != null && !assigned.getId().equals(currentUser.getId())) {
+            String assigneeTitle = "Вам назначена задача";
+            String assigneeContent = currentUser.getFirstName() + " " + currentUser.getLastName() +
+                    " назначил(а) вам задачу: " + request.getTitle();
+            notificationService.sendNotification(assigned, "TASK", assigneeTitle, assigneeContent, "/tasks/" + savedTask.getId());
+        }
 
         // Добавляем файлы, если они есть
         if (files != null && !files.isEmpty()) {
