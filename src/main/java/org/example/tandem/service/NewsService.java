@@ -33,12 +33,14 @@ public class NewsService {
     private final NewsRepository newsRepository;
     private final UserRepository userRepository;
     private final FileService fileService;
+    private final NotificationService notificationService;
 
-    public NewsService(NewsRepository newsRepository, UserRepository userRepository, FileService fileService) {
+    public NewsService(NewsRepository newsRepository, UserRepository userRepository, FileService fileService, NotificationService notificationService) {
         this.newsRepository = newsRepository;
         this.userRepository = userRepository;
 
         this.fileService = fileService;
+        this.notificationService = notificationService;
     }
 
     private User getCurrentUser() {
@@ -73,6 +75,14 @@ public class NewsService {
                 fileService.uploadFileForNews(file, savedNews);
             }
         }
+
+        // Уведомление всем пользователям
+        String title = "Новая новость";
+        String content = currentUser.getFirstName() + " " + currentUser.getLastName() +
+                " опубликовал(а) " + request.getTitle();
+        String link = "/news/" + savedNews.getId();
+
+        notificationService.sendNotificationToAllUsers("NEWS", title, content, link);
 
         return mapToResponse(savedNews);
     }
