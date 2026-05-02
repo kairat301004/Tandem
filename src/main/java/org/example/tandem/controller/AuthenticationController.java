@@ -61,6 +61,7 @@ import org.example.tandem.entity.User;
 import org.example.tandem.security.CustomUserDetails;
 import org.example.tandem.service.auth.AuthService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
@@ -103,5 +104,22 @@ public class AuthenticationController {
         session.setAttribute("userId", authResponse.getId());
 
         return authResponse;
+    }
+
+    @PostMapping("/logout")
+    public void logout(HttpSession session) {
+        session.invalidate();
+    }
+
+    @GetMapping("/me")
+    public AuthResponse getCurrentUser(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User not authenticated");
+        }
+
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = userDetails.getUser();
+
+        return new AuthResponse(user.getId(), user.getEmail(), user.getFirstName(), user.getLastName());
     }
 }

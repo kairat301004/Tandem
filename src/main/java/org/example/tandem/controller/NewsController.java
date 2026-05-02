@@ -6,6 +6,7 @@ import org.example.tandem.dto.news.NewsResponse;
 import org.example.tandem.service.NewsService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,13 +26,38 @@ public class NewsController {
         this.newsService = newsService;
     }
 
-    @PostMapping
+//    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+//    @PreAuthorize("hasAuthority('CREATE_NEWS')")
+//    public ResponseEntity<NewsResponse> createNews(
+//            @RequestPart(value = "news", required = false) @Valid NewsRequest multipartRequest,
+//            @RequestPart(value = "files", required = false) List<MultipartFile> files,
+//            @RequestBody(required = false) NewsRequest jsonRequest) {
+//
+//        // Определяем источник данных
+//        NewsRequest request = multipartRequest != null ? multipartRequest : jsonRequest;
+//
+//        if (request == null) {
+//            throw new IllegalArgumentException("Request body is required");
+//        }
+//
+//        NewsResponse response = newsService.createNews(request, files != null ? files : List.of());
+//        return new ResponseEntity<>(response, HttpStatus.CREATED);
+//    }
+
+    // Для запросов БЕЗ файлов (простой JSON)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('CREATE_NEWS')")
+    public ResponseEntity<NewsResponse> createNews(@Valid @RequestBody NewsRequest request) {
+        return new ResponseEntity<>(newsService.createNews(request, List.of()), HttpStatus.CREATED);
+    }
+
+    // Для запросов С файлами (Multipart)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('CREATE_NEWS')")
     public ResponseEntity<NewsResponse> createNews(
-            @RequestPart("news") @Valid NewsRequest request,
-            @RequestPart(value = "files", required = false)List<MultipartFile> files) {
-        NewsResponse response = newsService.createNews(request, files);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+            @RequestPart("news") NewsRequest request,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+        return new ResponseEntity<>(newsService.createNews(request, files), HttpStatus.CREATED);
     }
 
     @GetMapping
