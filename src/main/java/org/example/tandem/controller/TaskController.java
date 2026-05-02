@@ -7,6 +7,7 @@ import org.example.tandem.enums.TaskStatus;
 import org.example.tandem.service.TaskService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +29,15 @@ public class TaskController {
     }
 
 
-    @PostMapping
+    // Для запросов БЕЗ файлов (простой JSON)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('CREATE_NEWS')")
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskRequest request) {
+        return new ResponseEntity<>(taskService.createTask(request, List.of()), HttpStatus.CREATED);
+    }
+
+    // Для запросов С файлами (Multipart)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAuthority('CREATE_NEWS')")
     public ResponseEntity<TaskResponse> createTask(
             @RequestPart("task") @Valid TaskRequest request,
