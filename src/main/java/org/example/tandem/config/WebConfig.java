@@ -1,28 +1,28 @@
-package org.example.tandem.config;
-
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-@Configuration
-public class WebConfig implements WebMvcConfigurer {
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")  // адрес фронтенда
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
-                .allowedHeaders("*")
-                .allowCredentials(true)  // важное для сессий!
-                .maxAge(3600);
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Доступ к загруженным файлам (аватары, документы)
-        String uploadPath = System.getProperty("user.dir") + "/uploads/";
-        registry.addResourceHandler("/uploads/**")
-                .addResourceLocations("file:" + uploadPath);
-    }
-}
+//package org.example.tandem.config;
+//
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.web.servlet.config.annotation.CorsRegistry;
+//import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+//import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+//
+//@Configuration
+//public class WebConfig implements WebMvcConfigurer {
+//
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedOrigins("http://localhost:3000", "http://localhost:5173", "http://127.0.0.1:5173/")  // адрес фронтенда
+//                .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
+//                .allowedHeaders("*")
+//                .allowCredentials(true)  // важное для сессий!
+//                .maxAge(3600);
+//    }
+//
+//    @Override
+//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//        // Доступ к загруженным файлам (аватары, документы)
+//        String uploadPath = System.getProperty("user.dir") + "/uploads/";
+//        registry.addResourceHandler("/uploads/**")
+//                .addResourceLocations("file:" + uploadPath);
+//    }
+//}
